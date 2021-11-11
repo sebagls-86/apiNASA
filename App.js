@@ -1,87 +1,38 @@
-import * as React from 'react';
-import { Text, View, StyleSheet, Image, WebView} from 'react-native';
-import Constants from 'expo-constants';
+import React, {Component} from 'react';
+import { StyleSheet} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import Navigator from './Navitgator';
+import { createDrawerNavigator} from '@react-navigation/drawer';
+import Welcome from './Welcome';
+import Earth from './Earth';
 
-// You can import from local files
-import AssetExample from './components/AssetExample';
+const Drawer = createDrawerNavigator();
 
-//import getImage from './main.js';
-
-// or any pure javascript modules available in npm
-import { Card } from 'react-native-paper';
-
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      title: '',
-      pic: '',
-      explanation: '',
-      date: '',
-      media: '',
-      count: 0
-    };
-  }
-
-componentDidMount(){
- fetch('https://api.nasa.gov/planetary/apod?api_key=QViRwGQN1ZYqcGMLhLyQ4ktlw8CW5EzN6gsNnIac').then(res=>res.json()).then(response => {
-        this.setState({
-          title: response.title,
-          pic: response.url,
-          explanation: response.explanation,
-          date: response.date,
-          media: response.media_type
-        });
-
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-}
-
-
-  render() {
+export default class App extends Component {
+  
+  render(){
     return (
-      <View style={styles.container}>
-      <Text style={styles.titulo}>NASA API - FOTO DEL DIA</Text>
-        <Text style={styles.text}>{this.state.date}</Text>
-        <Text style={styles.text}>{this.state.title}</Text>
-        {this.state.media === 'video' ?
-        <WebView
-        javaScriptEnabled={true}
-        source={{url:this.state.pic}}
-        style={{width: 370, height:200}}
-        />:
-        <Image
-         source={{uri:this.state.pic}}
-        style={{width: 370, height:200}}
-        />}
-        
-        <Text style={styles.text}>{this.state.explanation}</Text>
-              
-      </View>
+
+      <NavigationContainer>
+     
+
+      <Drawer.Navigator initialRouteName="Welcome">
+       <Drawer.Screen name="Welcome" component={Welcome} />
+       <Drawer.Screen name="Earth" component={Earth} />
+     </Drawer.Navigator>
+
+      </NavigationContainer>
+
     );
   }
+
 }
 
 const styles = StyleSheet.create({
-
-  titulo:{
-    color: 'red',
-    fontSize: 25
-    
-  },
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
-    padding: 8,
-  },
-  text: {
-    color: '',
-    fontSize: 15,
-    padding: 10
   },
 });
